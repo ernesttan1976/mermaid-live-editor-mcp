@@ -68,7 +68,7 @@
         placeholder="Example:&#10;Main Topic&#10;  Subtopic 1&#10;    Detail A&#10;    Detail B&#10;  Subtopic 2&#10;    Detail C"
         disabled={isLoading}
         class="min-h-32 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        rows="8" />
+        rows="8"></textarea>
     </div>
 
     {#if error}
