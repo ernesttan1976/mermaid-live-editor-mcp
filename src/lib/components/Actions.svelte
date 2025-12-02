@@ -175,6 +175,34 @@ ${svgString}`);
     });
   };
 
+  const onDownloadSVGFile = () => {
+    const svgElement = getSvgElement();
+    if (!svgElement) {
+      notify('SVG not found');
+      return;
+    }
+
+    // Get the SVG as a string
+    const svgString = svgElement.outerHTML
+      .replaceAll('<br>', '<br/>')
+      .replaceAll(/<img([^>]*)>/g, (m, g: string) => `<img ${g} />`);
+
+    // Add XML declaration and stylesheet
+    const fullSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="${FONT_AWESOME_URL}" type="text/css"?>
+${svgString}`;
+
+    // Create blob and download
+    const blob = new Blob([fullSvg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    simulateDownload(getFileName('svg'), url);
+    URL.revokeObjectURL(url);
+
+    logEvent('download', {
+      type: 'svg-file'
+    });
+  };
+
   let gistURL = $state('');
   stateStore.subscribe(({ loader }) => {
     if (loader?.type === 'gist') {
@@ -251,6 +279,10 @@ ${svgString}`);
         </a>
       </ExternalLinkWrapper>
     </div>
+    <Button onclick={onDownloadSVGFile} class="w-full" variant="outline" size="sm">
+      <DownloadIcon />
+      Save as SVG File
+    </Button>
     <Separator />
     {#if isClipboardAvailable()}
       <CopyButton onclick={onCopyClipboard} label="Copy Image" />
