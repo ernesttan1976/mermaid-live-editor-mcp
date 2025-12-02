@@ -11,6 +11,7 @@ Edit, preview and share mermaid charts/diagrams.
 - Save the result as a svg
 - Get a link to a viewer of the diagram so that you can share it with others.
 - Get a link to edit the diagram so that someone else can tweak it and send a new link back
+- **Outline to Tree**: Convert any outline text into a left-to-right Mermaid tree diagram using AI
 
 ## Live demo
 
@@ -54,6 +55,19 @@ Default is empty, disabling analytics.
 When building set the MERMAID_IS_ENABLED_MERMAID_CHART_LINKS build argument to `true`
 
 Default is empty, disabling button to save to Mermaid Chart and promotional banner.
+
+### To enable Outline to Tree feature
+
+To use the AI-powered outline to tree diagram converter, set the `MERMAID_OPENAI_API_KEY` environment variable to your OpenAI API key.
+
+**Note**: This feature requires API routes to work. The current setup uses `@sveltejs/adapter-static` which doesn't support API routes in production. For production use, you'll need to switch to `@sveltejs/adapter-node` or `@sveltejs/adapter-auto`.
+
+For development, create a `.env` file in the project root:
+```
+MERMAID_OPENAI_API_KEY=your-api-key-here
+```
+
+The Outline to Tree feature uses OpenAI's GPT-4o-mini model to convert outline text into Mermaid flowchart syntax with left-to-right (LR) direction.
 
 ### To update the Security modal
 
@@ -110,6 +124,17 @@ pnpm dev -- --open
 ```
 
 This app is created with Svelte Kit.
+
+### Environment Variables
+
+For local development, create a `.env` file in the project root with the following variables:
+
+- `MERMAID_OPENAI_API_KEY` - Your OpenAI API key (required for Outline to Tree feature)
+- `MERMAID_RENDERER_URL` - URL for the rendering service (optional)
+- `MERMAID_KROKI_RENDERER_URL` - URL for Kroki instance (optional)
+- `MERMAID_ANALYTICS_URL` - Analytics service URL (optional)
+- `MERMAID_DOMAIN` - Domain for analytics (optional)
+- `MERMAID_IS_ENABLED_MERMAID_CHART_LINKS` - Set to `true` to enable Mermaid Chart links (optional)
 
 ## Release
 

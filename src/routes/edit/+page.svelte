@@ -7,6 +7,7 @@
   import McWrapper from '$/components/McWrapper.svelte';
   import MermaidChartIcon from '$/components/MermaidChartIcon.svelte';
   import Navbar from '$/components/Navbar.svelte';
+  import OutlineToTree from '$/components/OutlineToTree.svelte';
   import PanZoomToolbar from '$/components/PanZoomToolbar.svelte';
   import Preset from '$/components/Preset.svelte';
   import Share from '$/components/Share.svelte';
@@ -124,6 +125,7 @@
 
             <div class="group flex flex-wrap justify-between gap-4 sm:gap-6">
               <Preset />
+              <OutlineToTree />
               <Actions />
             </div>
           </div>
