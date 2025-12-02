@@ -3,9 +3,17 @@ services:
   mermaid:
     build:
       context: .
-      target: mermaid-dev
-    volumes:
-      - ./src:/app/src
+      target: mermaid
+      args:
+        MERMAID_RENDERER_URL: ${MERMAID_RENDERER_URL:-}
+        MERMAID_KROKI_RENDERER_URL: ${MERMAID_KROKI_RENDERER_URL:-}
+        MERMAID_ANALYTICS_URL: ${MERMAID_ANALYTICS_URL:-}
+        MERMAID_DOMAIN: ${MERMAID_DOMAIN:-}
+        MERMAID_IS_ENABLED_MERMAID_CHART_LINKS: ${MERMAID_IS_ENABLED_MERMAID_CHART_LINKS:-}
+    env_file:
+      - .env
+    environment:
+      - MERMAID_OPENAI_API_KEY=${MERMAID_OPENAI_API_KEY:-}
     ports:
-      - 3000:3000
-      - 24678:24678
+      - "3000:3000"
+    restart: unless-stopped

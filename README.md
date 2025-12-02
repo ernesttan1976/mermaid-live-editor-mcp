@@ -83,11 +83,43 @@ if you wish.
 
 ### Development
 
+For development with hot reload:
 ```bash
 docker compose up --build
 ```
 
 Then open http://localhost:3000
+
+### Production with Docker Compose
+
+For production deployment using docker-compose:
+
+1. Create a `.env` file in the project root (copy from `.env.example`):
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` and add your OpenAI API key:
+```
+MERMAID_OPENAI_API_KEY=your-openai-api-key-here
+```
+
+3. Build and run with docker-compose:
+```bash
+docker compose up --build
+```
+
+The application will be available at http://localhost:3000
+
+To run in detached mode:
+```bash
+docker compose up -d --build
+```
+
+To stop:
+```bash
+docker compose down
+```
 
 ### Building and running images locally
 

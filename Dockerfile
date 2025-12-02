@@ -19,7 +19,6 @@ ARG MERMAID_KROKI_RENDERER_URL
 ARG MERMAID_ANALYTICS_URL
 ARG MERMAID_DOMAIN
 ARG MERMAID_IS_ENABLED_MERMAID_CHART_LINKS
-ARG MERMAID_OPENAI_API_KEY
 
 COPY . ./
 
@@ -47,9 +46,8 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOST=0.0.0.0
 
-# Pass through environment variables at runtime
-ARG MERMAID_OPENAI_API_KEY
-ENV MERMAID_OPENAI_API_KEY=${MERMAID_OPENAI_API_KEY}
+# Environment variables will be passed at runtime via docker-compose or -e flags
+# No need to set them at build time
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
