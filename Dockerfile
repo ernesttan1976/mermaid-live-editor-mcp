@@ -22,6 +22,9 @@ ARG MERMAID_IS_ENABLED_MERMAID_CHART_LINKS
 
 COPY . ./
 
+# Run svelte-kit sync to generate .svelte-kit directory before build
+RUN pnpm svelte-kit sync || true
+
 RUN pnpm build
 
 FROM mermaid-live-editor-builder AS mermaid-dev
