@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
 import { sveltePreprocess } from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -10,10 +10,7 @@ const config = {
     alias: {
       '$/*': './src/lib/*'
     },
-    adapter: adapter({
-      pages: 'docs',
-      fallback: '404.html'
-    })
+    adapter: adapter()
   }
 };
 

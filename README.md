@@ -60,11 +60,17 @@ Default is empty, disabling button to save to Mermaid Chart and promotional bann
 
 To use the AI-powered outline to tree diagram converter, set the `MERMAID_OPENAI_API_KEY` environment variable to your OpenAI API key.
 
-**Note**: This feature requires API routes to work. The current setup uses `@sveltejs/adapter-static` which doesn't support API routes in production. For production use, you'll need to switch to `@sveltejs/adapter-node` or `@sveltejs/adapter-auto`.
+**Note**: This project now uses `@sveltejs/adapter-node` to support API routes required for the Outline to Tree feature.
 
 For development, create a `.env` file in the project root:
 ```
 MERMAID_OPENAI_API_KEY=your-api-key-here
+```
+
+For Docker deployment, pass the API key as a build argument or environment variable:
+```bash
+docker build --build-arg MERMAID_OPENAI_API_KEY=your-api-key-here -t mermaid-live-editor .
+docker run -p 3000:3000 -e MERMAID_OPENAI_API_KEY=your-api-key-here mermaid-live-editor
 ```
 
 The Outline to Tree feature uses OpenAI's GPT-4o-mini model to convert outline text into Mermaid flowchart syntax with left-to-right (LR) direction.
@@ -88,21 +94,48 @@ Then open http://localhost:3000
 #### Build
 
 ```bash
-docker build -t mermaid-js/mermaid-live-editor .
+docker build -t mermaid-live-editor .
+```
+
+To include the OpenAI API key for Outline to Tree feature:
+```bash
+docker build --build-arg MERMAID_OPENAI_API_KEY=your-api-key-here -t mermaid-live-editor .
 ```
 
 #### Run
 
 ```bash
-docker run --detach --name mermaid-live-editor --publish 8080:8080 mermaid-js/mermaid-live-editor
+docker run --detach --name mermaid-live-editor --publish 3000:3000 mermaid-live-editor
 ```
 
-Visit: <http://localhost:8080>
+To pass the OpenAI API key at runtime:
+```bash
+docker run --detach --name mermaid-live-editor --publish 3000:3000 -e MERMAID_OPENAI_API_KEY=your-api-key-here mermaid-live-editor
+```
+
+Visit: <http://localhost:3000>
 
 #### Stop
 
 ```bash
 docker stop mermaid-live-editor
+```
+
+### Deploy to Docker Hub
+
+1. Build the image:
+```bash
+docker build --build-arg MERMAID_OPENAI_API_KEY=your-api-key-here -t yourusername/mermaid-live-editor-mcp .
+```
+
+2. Push to Docker Hub:
+```bash
+docker push yourusername/mermaid-live-editor-mcp
+```
+
+3. Run from Docker Hub:
+```bash
+docker run -p 3000:3000 -e MERMAID_OPENAI_API_KEY=your-api-key-here yourusername/mermaid-live-editor-mcp
 ```
 
 ## Setup
