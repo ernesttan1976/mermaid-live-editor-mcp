@@ -46,7 +46,6 @@
 
       logEvent('convertOutline', { success: true });
       notify('Outline converted successfully!');
-      outlineText = ''; // Clear the input after successful conversion
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
       error = errorMessage;

@@ -7,6 +7,8 @@
   import { TID } from '$/constants';
   import { env } from '$/util/env';
   import { stateStore, updateCode, updateConfig, urlsStore } from '$lib/util/state';
+  import { notify } from '$lib/util/notify';
+  import { logEvent } from '$lib/util/stats';
   import { debounce } from 'lodash-es';
   import ExclamationCircleIcon from '~icons/material-symbols/error-outline-rounded';
 
@@ -20,10 +22,57 @@
   };
 
   let showError = $state(false);
+  let isFixing = $state(false);
 
   const showErrorDebounced = debounce(() => {
     showError = true;
   }, 5000);
+
+  const fixWithOpenAI = async () => {
+    if (!$stateStore.code || !$stateStore.error) {
+      return;
+    }
+
+    isFixing = true;
+
+    try {
+      const response = await fetch('/api/fix-mermaid', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          mermaidCode: $stateStore.code,
+          errorMessage: $stateStore.error?.toString()
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fix Mermaid code');
+      }
+
+      if (!data.mermaidCode) {
+        throw new Error('No fixed Mermaid code returned from API');
+      }
+
+      // Update the editor with the fixed code
+      updateCode(data.mermaidCode, {
+        resetPanZoom: false,
+        updateDiagram: true
+      });
+
+      logEvent('fixMermaid', { success: true });
+      notify('Mermaid code fixed successfully!');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+      notify(`Error: ${errorMessage}`);
+      logEvent('fixMermaid', { success: false, error: errorMessage });
+    } finally {
+      isFixing = false;
+    }
+  };
 
   $effect(() => {
     if ($stateStore.error) {
@@ -60,16 +109,32 @@
           </div>
         </div>
         {#if $stateStore.editorMode === 'code'}
-          <McWrapper>
+          <div class="flex gap-2">
             <Button
               variant="accent"
               size="sm"
-              data-testid={TID.aiRepairButton}
-              href={$urlsStore.mermaidChart({ medium: 'ai_repair' }).save}>
-              <MermaidChartIcon />
-              AI Repair
+              onclick={fixWithOpenAI}
+              disabled={isFixing}
+              data-testid="fix-with-openai-button">
+              {#if isFixing}
+                Fixing...
+              {:else}
+                Fix with OpenAI
+              {/if}
             </Button>
-          </McWrapper>
+            {#if env.isEnabledMermaidChartLinks}
+              <McWrapper>
+                <Button
+                  variant="accent"
+                  size="sm"
+                  data-testid={TID.aiRepairButton}
+                  href={$urlsStore.mermaidChart({ medium: 'ai_repair' }).save}>
+                  <MermaidChartIcon />
+                  AI Repair
+                </Button>
+              </McWrapper>
+            {/if}
+          </div>
         {/if}
       </div>
       <output class="max-h-32 overflow-auto bg-muted p-2" name="mermaid-error" for="editor">

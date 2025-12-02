@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 /**
  * Normalizes Mermaid flowchart syntax to ensure it's valid and consistent
  */
-function normalizeMermaidSyntax(code: string): string {
+export function normalizeMermaidSyntax(code: string): string {
   let normalized = code.trim();
 
   // Ensure it starts with flowchart LR
