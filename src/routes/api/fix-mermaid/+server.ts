@@ -1,7 +1,7 @@
 import { env } from '$lib/util/env';
+import { normalizeMermaidSyntax } from '$lib/util/mermaidNormalize';
 import { json, type RequestHandler } from '@sveltejs/kit';
 import OpenAI from 'openai';
-import { normalizeMermaidSyntax } from '../convert-outline/+server';
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
